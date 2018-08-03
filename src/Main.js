@@ -1,10 +1,11 @@
 import React from 'react';
+import {Register} from "./Register";
 
 export class Main extends React.Component {
     render() {
         return (
-            <div>
-                This is Main.
+            <div className="main">
+                <Register/>
             </div>
         );
     }
