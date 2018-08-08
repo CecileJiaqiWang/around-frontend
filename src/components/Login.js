@@ -1,12 +1,13 @@
 import React from 'react';
-import $ from'jquery';
-import { Link } from 'react-router-dom';
+import $ from 'jquery';
+import {Link} from 'react-router-dom';
 import {API_ROOT} from "../Constants";
-import { Form, Icon, Input, Button, message} from 'antd';
+import {Form, Icon, Input, Button, message} from 'antd';
 
 const FormItem = Form.Item;
 
-class HorizontalLoginForm extends React.Component {
+
+class NormalLoginForm extends React.Component {
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -31,36 +32,40 @@ class HorizontalLoginForm extends React.Component {
     }
 
     render() {
-        const { getFieldDecorator } = this.props.form;
-
+        const {getFieldDecorator} = this.props.form;
         return (
-            <Form layout="inline" onSubmit={this.handleSubmit}>
+            <Form onSubmit={this.handleSubmit} className="my-login-form">
                 <FormItem>
                     {getFieldDecorator('userName', {
-                        rules: [{ required: true, message: 'Please input your username!' }],
+                        rules: [{required: true, message: 'Please input your username!'}],
                     })(
-                        <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
+                        <Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>} placeholder="Username"/>
                     )}
                 </FormItem>
                 <FormItem>
                     {getFieldDecorator('password', {
-                        rules: [{ required: true, message: 'Please input your Password!' }],
+                        rules: [{required: true, message: 'Please input your Password!'}],
                     })(
-                        <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
+                        <Input prefix={<Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>} type="password"
+                               placeholder="Password"/>
                     )}
                 </FormItem>
                 <FormItem>
-                    <Button
-                        type="primary"
-                        htmlType="submit"
-                    >
+                    {/*{getFieldDecorator('remember', {*/}
+                    {/*valuePropName: 'checked',*/}
+                    {/*initialValue: true,*/}
+                    {/*})(*/}
+                    {/*<Checkbox>Remember me</Checkbox>*/}
+                    {/*)}*/}
+                    <Button type="primary" htmlType="submit" className="login-form-button">
                         Log in
-                    </Button>
-                    Or <Link to={"/register"}> register now! </Link>
+                    </Button>{" "}
+                    Or {" "}
+                    <Link to="/register">register now!</Link>
                 </FormItem>
             </Form>
         );
     }
 }
 
-export const Login = Form.create()(HorizontalLoginForm);
+export const Login = Form.create()(NormalLoginForm);
