@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tabs, Button } from 'antd';
-import {POSITION_KEY, GEO_OPTIONS} from "../Constants"
+import {POSITION_KEY, GEO_OPTIONS, TOKEN_KEY, AUTH_PREFIX} from "../Constants";
+import $ from 'jquery';
 
 
 const TabPane = Tabs.TabPane;
@@ -26,7 +27,9 @@ export class Home extends React.Component {
                 this.onSuccessLoadGeoLocation,
                 this.onFailedLoadGeolocation,
                 GEO_OPTIONS,
-            )
+            );
+        } else {
+            this.setState({error: 'Your browser does not support geolocation! Please change a browser!'})
         }
     }
 
@@ -35,8 +38,8 @@ export class Home extends React.Component {
         this.setState({loadingGeoLocation: false, error: ''});
         // Destruct.
         const{ latitude, longitude } = position.coords;
-        localStorage.setItem(POSITION_KEY, JSON .stringify({lat: latitude, lon: longitude}));
-        // ToDo: Load Nearby Posts according the current location.
+        localStorage.setItem(POSITION_KEY, JSON.stringify({lat: latitude, lon: longitude}));
+        this.loadNearbyPosts();
 
     }
 
@@ -45,11 +48,25 @@ export class Home extends React.Component {
     }
 
 
-
-
-
-
-
+    loadNearbyPosts = () => {
+        const { latitude, longitude } = JSON.parse(localStorage.getItem(POSITION_KEY));
+        this.setState({loadingPosts: true, error: ''});
+        $.ajax({
+            url: `${API_ROOT}/search?lat=${latitude}&lon=${longitude}&range=20000`,
+            method: 'GET',
+            headers: {
+                Authorization: `${AUTH_PREFIX} ${localStorage.getItem(TOKEN_KEY)}`,
+            },
+        }).then((response) => {
+            this.setState({ posts: response, loadingPosts: false, error: ''});
+            console.log(response);
+        }, (error) => {
+            this.setState({ loadingPosts: false, error: error.responseText});
+            console.log(error);
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
 
 
     render() {
